@@ -9,6 +9,7 @@ export default {
         'input-bg': '#2C353D',
         'placeholder': '#858EAD',
         'button-bg': '#FF6934',
+        'like-bg': '#2C353D',
       },
       'width': {
         '128': '49rem',
