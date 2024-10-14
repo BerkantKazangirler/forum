@@ -1,36 +1,16 @@
 import { IoMdHeartEmpty } from "react-icons/io";
+import { FaHeart } from "react-icons/fa";
 import classNames from "classnames";
 import { useState } from "react";
-
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
-
-interface Users {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
-
-interface Comments {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-}
+import { PostsTypeI, UsersTypeI } from "../../pages/type";
+import { Link } from "react-router-dom";
 
 interface props {
-  posts: Post[];
-  users: Users[];
-  comments: Comments[];
+  posts: PostsTypeI[];
+  users: UsersTypeI[];
 }
 
-function CreateMenu({ posts, users, comments }: props) {
+function PostCard({ posts, users }: props) {
   const postdatas = posts.slice(0, 4);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
@@ -45,8 +25,7 @@ function CreateMenu({ posts, users, comments }: props) {
   return (
     <>
       {postdatas.map((post, index) => {
-        const user = users.find((user) => user.id === post.userId);
-        const mail = comments.find((email) => email.id === post.id);
+        const user = users.find((user) => user.id === post.id);
 
         return (
           <div
@@ -62,17 +41,22 @@ function CreateMenu({ posts, users, comments }: props) {
               />
               <div className="flex flex-col w-full justify-between">
                 <div className="flex flex-row justify-between">
-                  <span className="text-white font-medium text-lg w-full">
+                  <Link
+                    to={`/posts/${post?.id}`}
+                    className="text-white font-medium text-lg w-full"
+                  >
                     {post ? post.title : "Veri Yok"}
-                  </span>
+                  </Link>
                   <button
-                    className={classNames(" p-1 rounded-full text-xl h-fit", {
+                    className={classNames("p-1 rounded-full text-xl h-fit", {
                       "bg-orange-400": likedPosts.includes(post.id),
                       "bg-like-bg": !likedPosts.includes(post.id),
                     })}
                     onClick={() => toggleLike(post.id)}
                   >
-                    <IoMdHeartEmpty className="text-white" />
+                    {(likedPosts.includes(post.id) && (
+                      <FaHeart className="text-white" />
+                    )) || <IoMdHeartEmpty className="text-white" />}
                   </button>
                 </div>
                 <div className="flex flex-row h-12 gap-2">
@@ -81,14 +65,9 @@ function CreateMenu({ posts, users, comments }: props) {
                     alt="User avatar"
                     className="h-10 rounded-full"
                   />
-                  <div className="flex flex-col">
-                    <span className="text-white font-medium">
-                      {user ? user.name : "Veri Yok"}
-                    </span>
-                    <span className="text-xs text-white/70">
-                      {mail ? mail.email : "Veri Yok"}
-                    </span>
-                  </div>
+                  <span className="text-white font-medium">
+                    {user ? user.name : "Veri Yok"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -99,4 +78,4 @@ function CreateMenu({ posts, users, comments }: props) {
   );
 }
 
-export default CreateMenu;
+export default PostCard;
