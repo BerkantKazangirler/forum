@@ -21,54 +21,32 @@ interface Users {
   name: string;
   username: string;
   email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipcode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
-  };
-  phone: string;
-  website: string;
-  company: {
-    name: string;
-    catchPhrase: string;
-    bs: string;
-  };
 }
 
 function App() {
-  const [posts, setPosts] = useState<Posts[]>([]);
-  const [comments, setComments] = useState<Comments[]>([]);
-  const [users, setUsers] = useState<Users[]>([]);
-
-  async function fetchPosts(): Promise<Posts[]> {
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-    const postsdata = await response.json();
-    return postsdata;
-  }
-
-  async function fetchUsers(): Promise<Users[]> {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
-    const usersdata = await response.json();
-    return usersdata;
-  }
-
-  async function fetchComments(): Promise<Comments[]> {
-    const response = await fetch(
-      "https://jsonplaceholder.typicode.com/comments"
-    );
-    const commentsdata = await response.json();
-    return commentsdata;
-  }
+  const [posts, setPosts] = useState<Posts[] | undefined>();
+  const [comments, setComments] = useState<Comments[] | undefined>();
+  const [users, setUsers] = useState<Users[] | undefined>();
 
   useEffect(() => {
-    fetchPosts().then((postsdata) => setPosts(postsdata));
-    fetchComments().then((commentsdata) => setComments(commentsdata));
-    fetchUsers().then((usersdata) => setUsers(usersdata));
+    async function datas() {
+      const postapi: Posts[] = await fetch(
+        "https://jsonplaceholder.typicode.com/posts"
+      ).then((res) => res.json());
+
+      const commentsapi: Comments[] = await fetch(
+        "https://jsonplaceholder.typicode.com/comments"
+      ).then((res) => res.json());
+
+      const userapi: Users[] = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      ).then((res) => res.json());
+      setPosts(postapi);
+      setComments(commentsapi);
+      setUsers(userapi);
+    }
+
+    datas();
   }, []);
 
   return (
@@ -77,11 +55,13 @@ function App() {
         <div className="flex flex-col w-128 gap-6">
           <CreateMenu.CreateMenu />
           <div className="flex flex-col gap-4">
-            <UserCard.UserCard
-              posts={posts}
-              users={users}
-              comments={comments}
-            />
+            {posts && users && comments && (
+              <UserCard.UserCard
+                posts={posts}
+                users={users}
+                comments={comments}
+              />
+            )}
           </div>
         </div>
       </div>

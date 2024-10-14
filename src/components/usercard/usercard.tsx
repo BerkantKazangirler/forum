@@ -14,23 +14,6 @@ interface Users {
   name: string;
   username: string;
   email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipcode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
-  };
-  phone: string;
-  website: string;
-  company: {
-    name: string;
-    catchPhrase: string;
-    bs: string;
-  };
 }
 
 interface Comments {
@@ -48,7 +31,7 @@ interface props {
 }
 
 function CreateMenu({ posts, users, comments }: props) {
-  const test = posts.slice(0, 3);
+  const postdatas = posts.slice(0, 4);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
   const toggleLike = (postId: number) => {
@@ -61,7 +44,7 @@ function CreateMenu({ posts, users, comments }: props) {
 
   return (
     <>
-      {test.map((post, index) => {
+      {postdatas.map((post, index) => {
         const user = users.find((user) => user.id === post.userId);
         const mail = comments.find((email) => email.id === post.id);
 
