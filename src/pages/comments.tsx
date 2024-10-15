@@ -31,7 +31,9 @@ function Comments() {
     fetchComments();
   }, []);
 
-  const commentsdata = comments ? comments.slice(0, 5) : [];
+  const commentsdata = comments ? comments : [];
+
+  const testdata = posts ? posts : [];
 
   return (
     <>
@@ -61,7 +63,7 @@ function Comments() {
           </div>
         </div>
         {commentsdata.map((data) => {
-          if (data.postId === posts[Number(id) - 1].userId) {
+          if (data.postId === testdata[Number(id) - 1].id) {
             return (
               <div className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3">
                 <div className="flex flex-col w-full justify-between gap-2">
