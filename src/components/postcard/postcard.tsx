@@ -1,7 +1,7 @@
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PostsTypeI, UsersTypeI } from "../../pages/type";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,15 @@ function PostCard({ posts, users }: props) {
     } else {
       setLikedPosts([...likedPosts, postId]);
     }
+    localStorage.setItem("likedposts", likedPosts.toString());
   };
+
+  useEffect(() => {
+    const local = localStorage.getItem("likedposts");
+    if (local == null) {
+      localStorage.setItem("likedposts", "false");
+    }
+  }, []);
 
   return (
     <>
@@ -65,9 +73,14 @@ function PostCard({ posts, users }: props) {
                     alt="User avatar"
                     className="h-10 rounded-full"
                   />
-                  <span className="text-white font-medium">
-                    {user ? user.name : "Veri Yok"}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-white font-medium">
+                      {user ? user.name : "Veri Yok"}
+                    </span>
+                    <span className="text-white/50 text-[12px] font-medium">
+                      {user ? user.email : "Veri Yok"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -55,17 +55,25 @@ function Comments() {
                   alt="User avatar"
                   className="h-10 rounded-full"
                 />
-                <span className="text-white font-medium">
-                  {users ? users[Number(id) - 1].name : "Veri Yok"}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-white font-medium">
+                    {users ? users[Number(id) - 1].name : "Veri Yok"}
+                  </span>
+                  <span className="text-white/50 text-[12px] font-medium">
+                    {users ? users[Number(id) - 1].email : "Veri Yok"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {commentsdata.map((data) => {
+        {commentsdata.map((data, index) => {
           if (data.postId === testdata[Number(id) - 1].id) {
             return (
-              <div className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3">
+              <div
+                className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
+                key={index}
+              >
                 <div className="flex flex-col w-full justify-between gap-2">
                   <span className="text-white font-medium text-lg w-full">
                     {data ? data.name : "Veri Yok"}

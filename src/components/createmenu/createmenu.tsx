@@ -1,10 +1,9 @@
 import { useState } from "react";
-
 function CreateMenu() {
   const [text, setText] = useState("");
-  const [post, setPost] = useState("");
-
-  function test() {}
+  function test() {
+    console.log(text);
+  }
 
   return (
     <div className="bg-element-bg rounded-xl">
