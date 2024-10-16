@@ -47,12 +47,14 @@ function CreateMenu() {
                 type="email"
                 placeholder="Mail"
                 onChange={(e) => setMail(e.currentTarget.value)}
+                value={mail}
                 className="bg-input-bg p-2 rounded text-white/70"
               />
               <input
                 type="text"
                 placeholder="Name"
                 onChange={(e) => setName(e.currentTarget.value)}
+                value={name}
                 className="bg-input-bg p-2 rounded text-white/70"
               />
             </div>
