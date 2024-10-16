@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CommentsTypeI, PostsTypeI, UsersTypeI } from "./type";
 function Comments() {
-  const { id } = useParams();
-
   const [posts, setPosts] = useState<PostsTypeI[] | undefined>();
   const [comments, setComments] = useState<CommentsTypeI[] | undefined>();
   const [users, setUsers] = useState<UsersTypeI[] | undefined>();
@@ -34,6 +32,8 @@ function Comments() {
   const commentsdata = comments ? comments : [];
 
   const testdata = posts ? posts : [];
+
+  const { id } = useParams();
 
   return (
     <>
@@ -67,32 +67,37 @@ function Comments() {
             </div>
           </div>
         </div>
-        {commentsdata.map((data, index) => {
-          if (data.postId === testdata[Number(id) - 1].id) {
-            return (
-              <div
-                className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
-                key={index}
-              >
-                <div className="flex flex-col w-full justify-between gap-2">
-                  <span className="text-white font-medium text-lg w-full">
-                    {data ? data.name : "Veri Yok"}
-                  </span>
-                  <span className="text-white font-medium/80 text-base w-full">
-                    {data ? data.body : "Veri Yok"}
-                  </span>
-                  <span className="text-white/60 text-xs font-medium">
-                    {data ? data.email : "Veri Yok"}
-                  </span>
+        <Suspense fallback={<Loading />}>
+          {commentsdata.map((data, index) => {
+            if (data.postId === testdata[Number(id) - 1].id) {
+              return (
+                <div
+                  className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
+                  key={index}
+                >
+                  <div className="flex flex-col w-full justify-between gap-2">
+                    <span className="text-white font-medium text-lg w-full">
+                      {data ? data.name : "Veri Yok"}
+                    </span>
+                    <span className="text-white font-medium/80 text-base w-full">
+                      {data ? data.body : "Veri Yok"}
+                    </span>
+                    <span className="text-white/60 text-xs font-medium">
+                      {data ? data.email : "Veri Yok"}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          }
-          return null;
-        })}
+              );
+            }
+            return null;
+          })}
+        </Suspense>
       </div>
     </>
   );
+  function Loading() {
+    return <h2>Yükleniyor...</h2>;
+  }
 }
 
 export default Comments;
