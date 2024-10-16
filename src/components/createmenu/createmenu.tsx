@@ -17,7 +17,7 @@ function CreateMenu() {
     <div className="bg-element-bg rounded-xl">
       <form action="">
         <Menu>
-          <div className="flex flex-row gap-6 p-4">
+          <div className="flex flex-row gap-6 p-4 min-h-20">
             <MenuButton>
               <img
                 src={"./public/user.png"}
@@ -25,10 +25,9 @@ function CreateMenu() {
                 className="rounded-full w-12"
               />
             </MenuButton>
-            <input
-              type="text"
+            <textarea
               placeholder="Let's share what going on your mind..."
-              className="w-full bg-input-bg placeholder:text-placeholder indent-3 text-white/70 rounded"
+              className="w-full bg-input-bg placeholder:text-placeholde my-auto min-h-12 max-h-60  indent-3 text-white/70 rounded"
               required
               onChange={(e) => {
                 setText(e.currentTarget.value);
@@ -38,7 +37,7 @@ function CreateMenu() {
               type="button"
               value="Create Post"
               onClick={() => test()}
-              className="bg-button-bg text-white w-40 font-semibold rounded hover:cursor-pointer"
+              className="bg-button-bg text-white w-40 font-semibold rounded hover:cursor-pointer h-12 my-auto"
             />
           </div>
           <MenuItems>
