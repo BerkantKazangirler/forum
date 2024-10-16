@@ -1,10 +1,11 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CommentsTypeI, PostsTypeI, UsersTypeI } from "./type";
+
 function Comments() {
-  const [posts, setPosts] = useState<PostsTypeI[] | undefined>();
-  const [comments, setComments] = useState<CommentsTypeI[] | undefined>();
-  const [users, setUsers] = useState<UsersTypeI[] | undefined>();
+  const [posts, setPosts] = useState<PostsTypeI[]>();
+  const [comments, setComments] = useState<CommentsTypeI[]>();
+  const [users, setUsers] = useState<UsersTypeI[]>();
 
   const fetchPosts = () => {
     fetch("https://jsonplaceholder.typicode.com/posts")
@@ -30,7 +31,6 @@ function Comments() {
   }, []);
 
   const commentsdata = comments ? comments : [];
-
   const testdata = posts ? posts : [];
 
   const { id } = useParams();
@@ -79,10 +79,10 @@ function Comments() {
                     <span className="text-white font-medium text-lg w-full">
                       {data ? data.name : "Veri Yok"}
                     </span>
-                    <span className="text-white font-medium/80 text-base w-full">
+                    <span className="text-white font-medium/80 text-[14px] w-full">
                       {data ? data.body : "Veri Yok"}
                     </span>
-                    <span className="text-white/60 text-xs font-medium">
+                    <span className="text-white/60 text-[12px] font-medium">
                       {data ? data.email : "Veri Yok"}
                     </span>
                   </div>
