@@ -2,7 +2,6 @@ import { useState } from "react";
 
 function CreateMenu() {
   const [text, setText] = useState(String);
-
   function test() {
     fetch("https://jsonplaceholder.typicode.com/posts", {
       method: "POST",
@@ -12,32 +11,6 @@ function CreateMenu() {
         title:
           "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
         body: text,
-      }),
-    });
-
-    fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
-      body: JSON.stringify({
-        id: "999",
-        name: "Berkant Kazangirler",
-        username: "Berkant",
-        adress: {
-          street: "Asd",
-          suite: "asd",
-          city: "asd",
-          zipcode: "asd",
-          geo: {
-            lat: "-123",
-            lng: "-123",
-          },
-        },
-        phone: "1231231231",
-        website: "asdasdad.com",
-        company: {
-          name: "asd",
-          catchPhrase: "asdasdasd",
-          bs: "das",
-        },
       }),
     });
   }

@@ -1,11 +1,12 @@
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import classNames from "classnames";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PostsTypeI, UsersTypeI } from "../../pages/type";
 import { Link } from "react-router-dom";
 
 function PostCard({}) {
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState<PostsTypeI[]>([]);
   const [users, setUsers] = useState<UsersTypeI[]>([]);
 
@@ -15,11 +16,14 @@ function PostCard({}) {
       .then((res) => setPosts(res));
   };
 
-  const fetchUsers = () => {
+  function fetchUsers() {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
-      .then((res) => setUsers(res));
-  };
+      .then((res) => setUsers(res))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   const postdatas = posts.slice(0, 4);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
@@ -44,67 +48,80 @@ function PostCard({}) {
   }, []);
 
   return (
-    <Suspense fallback={<Loading />}>
-      {postdatas.map((post, index) => {
-        const user = users.find((user) => user.id === post.id);
+    <>
+      {isLoading && (
+        <>
+          {postdatas.map(() => {
+            return (
+              <div className="bg-element-bg rounded-xl w-128 h-32 ps-3 py-3 animate-pulse"></div>
+            );
+          })}
+        </>
+      )}
+      {!isLoading && (
+        <>
+          {postdatas.map((post, index) => {
+            const user = users.find((user) => user.id === post.id);
 
-        return (
-          <div
-            key={index}
-            className="bg-element-bg rounded-xl"
-            id={post.id.toString()}
-          >
-            <div className="flex flex-row justify-between gap-6 p-4">
-              <img
-                src={"./public/user.png"}
-                className="rounded-xl h-40"
-                alt=""
-              />
-              <div className="flex flex-col w-full justify-between">
-                <div className="flex flex-row justify-between">
-                  <Link
-                    to={`/posts/${post.id}`}
-                    className="text-white font-medium text-lg w-full"
-                  >
-                    {post ? post.title : "Veri Yok"}
-                  </Link>
-                  <button
-                    className={classNames("p-1 rounded-full text-xl h-fit", {
-                      "bg-orange-400": likedPosts.includes(post.id),
-                      "bg-like-bg": !likedPosts.includes(post.id),
-                    })}
-                    onClick={() => toggleLike(post.id)}
-                  >
-                    {(likedPosts.includes(post.id) && (
-                      <FaHeart className="text-white" />
-                    )) || <IoMdHeartEmpty className="text-white" />}
-                  </button>
-                </div>
-                <div className="flex flex-row h-12 gap-2">
+            return (
+              <div
+                key={index}
+                className="bg-element-bg rounded-xl"
+                id={post.id.toString()}
+              >
+                <div className="flex flex-row justify-between gap-6 p-4">
                   <img
                     src={"./public/user.png"}
-                    alt="User avatar"
-                    className="h-10 rounded-full"
+                    className="rounded-xl h-40"
+                    alt=""
                   />
-                  <div className="flex flex-col">
-                    <span className="text-white font-medium">
-                      {user ? user.name : "Veri Yok"}
-                    </span>
-                    <span className="text-white/50 text-[12px] font-medium">
-                      {user ? user.email : "Veri Yok"}
-                    </span>
+                  <div className="flex flex-col w-full justify-between">
+                    <div className="flex flex-row justify-between">
+                      <Link
+                        to={`/posts/${post.id}`}
+                        className="text-white font-medium text-lg w-full"
+                      >
+                        {post ? post.title : "Veri Yok"}
+                      </Link>
+                      <button
+                        className={classNames(
+                          "p-1 rounded-full text-xl h-fit",
+                          {
+                            "bg-orange-400": likedPosts.includes(post.id),
+                            "bg-like-bg": !likedPosts.includes(post.id),
+                          }
+                        )}
+                        onClick={() => toggleLike(post.id)}
+                      >
+                        {(likedPosts.includes(post.id) && (
+                          <FaHeart className="text-white" />
+                        )) || <IoMdHeartEmpty className="text-white" />}
+                      </button>
+                    </div>
+                    <div className="flex flex-row h-12 gap-2">
+                      <img
+                        src={"./public/user.png"}
+                        alt="User avatar"
+                        className="h-10 rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-white font-medium">
+                          {user ? user.name : "Veri Yok"}
+                        </span>
+                        <span className="text-white/50 text-[12px] font-medium">
+                          {user ? user.email : "Veri Yok"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        );
-      })}
-    </Suspense>
+            );
+          })}
+        </>
+      )}
+    </>
   );
-  function Loading() {
-    return <h2>Yükleniyor...</h2>;
-  }
 }
 
 export default PostCard;

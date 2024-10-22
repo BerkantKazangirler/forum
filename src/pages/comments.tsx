@@ -1,8 +1,9 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CommentsTypeI, PostsTypeI, UsersTypeI } from "./type";
 
 function Comments() {
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState<PostsTypeI[]>([]);
   const [comments, setComments] = useState<CommentsTypeI[]>([]);
   const [users, setUsers] = useState<UsersTypeI[]>([]);
@@ -23,13 +24,18 @@ function Comments() {
   const fetchComments = () => {
     fetch("https://jsonplaceholder.typicode.com/comments?postId=" + id)
       .then((res) => res.json())
-      .then((res) => setComments(res));
+      .then((res) => setComments(res))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   useEffect(() => {
     fetchPosts();
     fetchUsers();
     fetchComments();
   }, []);
+
+  const show = comments.slice(0, 4);
 
   //             if (data.postId === testdata[Number(id) - 1].id) {
 
@@ -65,34 +71,42 @@ function Comments() {
             </div>
           </div>
         </div>
-        <Suspense fallback={<Loading />}>
-          {comments.map((data, index) => {
-            return (
-              <div
-                className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
-                key={index}
-              >
-                <div className="flex flex-col w-full justify-between gap-2">
-                  <span className="text-white font-medium text-lg w-full">
-                    {data ? data.name : "Veri Yok"}
-                  </span>
-                  <span className="text-white font-medium/80 text-[14px] w-full">
-                    {data ? data.body : "Veri Yok"}
-                  </span>
-                  <span className="text-white/60 text-[12px] font-medium">
-                    {data ? data.email : "Veri Yok"}
-                  </span>
+        {isLoading && (
+          <>
+            {show.map(() => {
+              return (
+                <div className="bg-element-bg rounded-xl w-128 h-32 ps-3 py-3 animate-pulse"></div>
+              );
+            })}
+          </>
+        )}
+        {!isLoading && (
+          <>
+            {comments.map((data, index) => {
+              return (
+                <div
+                  className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
+                  key={index}
+                >
+                  <div className="flex flex-col w-full justify-between gap-2">
+                    <span className="text-white font-medium text-lg w-full">
+                      {data ? data.name : "Veri Yok"}
+                    </span>
+                    <span className="text-white font-medium/80 text-[14px] w-full">
+                      {data ? data.body : "Veri Yok"}
+                    </span>
+                    <span className="text-white/60 text-[12px] font-medium">
+                      {data ? data.email : "Veri Yok"}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </Suspense>
+              );
+            })}
+          </>
+        )}
       </div>
     </>
   );
-  function Loading() {
-    return <h2>Yükleniyor...</h2>;
-  }
 }
 
 export default Comments;
