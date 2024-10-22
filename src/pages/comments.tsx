@@ -3,24 +3,25 @@ import { useParams } from "react-router-dom";
 import { CommentsTypeI, PostsTypeI, UsersTypeI } from "./type";
 
 function Comments() {
-  const [posts, setPosts] = useState<PostsTypeI[]>();
-  const [comments, setComments] = useState<CommentsTypeI[]>();
-  const [users, setUsers] = useState<UsersTypeI[]>();
+  const [posts, setPosts] = useState<PostsTypeI[]>([]);
+  const [comments, setComments] = useState<CommentsTypeI[]>([]);
+  const [users, setUsers] = useState<UsersTypeI[]>([]);
+  const { id } = useParams();
 
   const fetchPosts = () => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
+    fetch("https://jsonplaceholder.typicode.com/posts?id=" + id)
       .then((res) => res.json())
       .then((res) => setPosts(res));
   };
 
   const fetchUsers = () => {
-    fetch("https://jsonplaceholder.typicode.com/users")
+    fetch("https://jsonplaceholder.typicode.com/users?id=" + id)
       .then((res) => res.json())
       .then((res) => setUsers(res));
   };
 
   const fetchComments = () => {
-    fetch("https://jsonplaceholder.typicode.com/comments")
+    fetch("https://jsonplaceholder.typicode.com/comments?postId=" + id)
       .then((res) => res.json())
       .then((res) => setComments(res));
   };
@@ -30,10 +31,7 @@ function Comments() {
     fetchComments();
   }, []);
 
-  const commentsdata = comments ? comments : [];
-  const testdata = posts ? posts : [];
-
-  const { id } = useParams();
+  //             if (data.postId === testdata[Number(id) - 1].id) {
 
   return (
     <>
@@ -47,7 +45,7 @@ function Comments() {
             />
             <div className="flex flex-col w-full justify-between">
               <span className="text-white font-medium text-lg w-full">
-                {posts ? posts[Number(id) - 1].title : "Veri Yok"}
+                {posts[0] ? posts[0].title : "Veri Yok"}
               </span>
               <div className="flex flex-row h-12 gap-2">
                 <img
@@ -57,10 +55,10 @@ function Comments() {
                 />
                 <div className="flex flex-col">
                   <span className="text-white font-medium">
-                    {users ? users[Number(id) - 1].name : "Veri Yok"}
+                    {users[0] ? users[0].name : "Veri Yok"}
                   </span>
                   <span className="text-white/50 text-[12px] font-medium">
-                    {users ? users[Number(id) - 1].email : "Veri Yok"}
+                    {users[0] ? users[0].email : "Veri Yok"}
                   </span>
                 </div>
               </div>
@@ -68,28 +66,25 @@ function Comments() {
           </div>
         </div>
         <Suspense fallback={<Loading />}>
-          {commentsdata.map((data, index) => {
-            if (data.postId === testdata[Number(id) - 1].id) {
-              return (
-                <div
-                  className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
-                  key={index}
-                >
-                  <div className="flex flex-col w-full justify-between gap-2">
-                    <span className="text-white font-medium text-lg w-full">
-                      {data ? data.name : "Veri Yok"}
-                    </span>
-                    <span className="text-white font-medium/80 text-[14px] w-full">
-                      {data ? data.body : "Veri Yok"}
-                    </span>
-                    <span className="text-white/60 text-[12px] font-medium">
-                      {data ? data.email : "Veri Yok"}
-                    </span>
-                  </div>
+          {comments.map((data, index) => {
+            return (
+              <div
+                className="bg-element-bg rounded-xl w-128 h-22 ps-3 py-3"
+                key={index}
+              >
+                <div className="flex flex-col w-full justify-between gap-2">
+                  <span className="text-white font-medium text-lg w-full">
+                    {data ? data.name : "Veri Yok"}
+                  </span>
+                  <span className="text-white font-medium/80 text-[14px] w-full">
+                    {data ? data.body : "Veri Yok"}
+                  </span>
+                  <span className="text-white/60 text-[12px] font-medium">
+                    {data ? data.email : "Veri Yok"}
+                  </span>
                 </div>
-              );
-            }
-            return null;
+              </div>
+            );
           })}
         </Suspense>
       </div>

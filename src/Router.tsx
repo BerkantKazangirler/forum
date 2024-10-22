@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Main from "./pages/main";
+import List from "./pages/list";
 import Comments from "./pages/comments";
 
 const Router = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Main />,
+      element: <List />,
     },
     {
       path: "/posts/:id",

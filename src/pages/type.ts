@@ -20,7 +20,3 @@ export interface UsersTypeI {
   username: string;
   email: string;
 }
-
-export interface TextTypeI {
-  push(text: string, arg1: string, arg2: string): unknown;
-}

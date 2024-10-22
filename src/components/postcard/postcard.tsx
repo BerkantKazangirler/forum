@@ -5,13 +5,23 @@ import { Suspense, useEffect, useState } from "react";
 import { PostsTypeI, UsersTypeI } from "../../pages/type";
 import { Link } from "react-router-dom";
 
-interface props {
-  posts: PostsTypeI[];
-  users: UsersTypeI[];
-}
+function PostCard({}) {
+  const [posts, setPosts] = useState<PostsTypeI[]>([]);
+  const [users, setUsers] = useState<UsersTypeI[]>([]);
 
-function PostCard({ posts, users }: props) {
-  const postdatas = posts.slice(0, 3);
+  const fetchPosts = () => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => res.json())
+      .then((res) => setPosts(res));
+  };
+
+  const fetchUsers = () => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((res) => setUsers(res));
+  };
+
+  const postdatas = posts.slice(0, 4);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
   const toggleLike = (postId: number) => {
@@ -24,6 +34,9 @@ function PostCard({ posts, users }: props) {
   };
 
   useEffect(() => {
+    fetchPosts();
+    fetchUsers();
+
     const local = localStorage.getItem("likedposts");
     if (local == null || local == "") {
       localStorage.setItem("likedposts", "false");
@@ -50,7 +63,7 @@ function PostCard({ posts, users }: props) {
               <div className="flex flex-col w-full justify-between">
                 <div className="flex flex-row justify-between">
                   <Link
-                    to={`/posts/${post?.id}`}
+                    to={`/posts/${post.id}`}
                     className="text-white font-medium text-lg w-full"
                   >
                     {post ? post.title : "Veri Yok"}
